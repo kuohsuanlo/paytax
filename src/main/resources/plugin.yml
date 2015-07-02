@@ -1,0 +1,13 @@
+name: PayTaxPlugin
+main: io.github.kuohsuan.paytax.PayTaxPlugin
+version: ${version}
+commands:
+  pay:
+    description: .
+    usage: ""
+  testp:
+    description: .
+    usage: ""
+  teste:
+    description: .
+    usage: ""
