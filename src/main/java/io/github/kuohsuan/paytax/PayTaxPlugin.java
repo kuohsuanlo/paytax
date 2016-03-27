@@ -63,29 +63,34 @@ public class PayTaxPlugin extends JavaPlugin {
         }
         Player player = (Player) sender;
         
-        if(command.getLabel().equals("pay")) {
+        if(command.getLabel().equals("paytax")  ||  command.getLabel().equals("pay")) {
             
             if (split.length == 2) {
                 try {
                     String receiver_name = split[0];
                     double tranfered_amount= Double.parseDouble(split[1]);
                     double tranfered_amount_taxed= tranfered_amount*1.07;
-                    EconomyResponse r_withdraw = econ.withdrawPlayer(player.getName(), tranfered_amount_taxed);
+                    
+                    EconomyResponse r_withdraw = econ.withdrawPlayer(this.getServer().getOfflinePlayer(player.getUniqueId()), tranfered_amount_taxed);
+                    
                     if (r_withdraw.transactionSuccess()){
                     	sender.sendMessage("§a轉帳成功: 你成功的支付 玩家§6"+receiver_name+" §a"+econ.format(tranfered_amount)+",並額外§c扣除7% 手續費§a "+econ.format(tranfered_amount*0.07));
                     	sender.sendMessage("§a你目前的餘額為  : "+ econ.format(econ.getBalance(player)));
-                    	EconomyResponse r_receive = econ.depositPlayer(receiver_name, tranfered_amount);
-                        if(r_receive.transactionSuccess()){
+                    	
+                    	EconomyResponse r_receive = econ.depositPlayer(this.getServer().getOfflinePlayer(this.getServer().getPlayer(receiver_name).getUniqueId()), tranfered_amount);
+                        
+                    	if(r_receive.transactionSuccess()){
                         	if(this.getServer().getPlayer(receiver_name)!=null){
                         		this.getServer().getPlayer(receiver_name).sendMessage("§a轉帳成功: 你收到了來自 玩家§6"+player.getName()+" §a的金額 "+econ.format(r_receive.amount));
                         		this.getServer().getPlayer(receiver_name).sendMessage("§a你目前餘額為 "+ econ.format(r_receive.balance));
-                        		EconomyResponse r_tax = econ.depositPlayer("tax", tranfered_amount*0.07);
-                        	}
+                        		EconomyResponse r_tax = econ.depositPlayer(this.getServer().getOfflinePlayer("tax"),  tranfered_amount*0.07);
+                        		//EconomyResponse r_tax = econ.depositPlayer(this.getServer().getOfflinePlayer(this.getServer().getPlayer("tax").getUniqueId()),  tranfered_amount*0.07);
+                             }
                         }
                         else{
                         	//basically this won't happened, because even the id never logs in, the payment is still valid, the money is still transfered to the mistyped account.
                         	sender.sendMessage("§c轉帳錯誤: 請確認金額後重新轉帳");
-                        	r_withdraw = econ.depositPlayer(player.getName(), tranfered_amount_taxed);
+                        	r_withdraw = econ.depositPlayer(this.getServer().getOfflinePlayer(player.getUniqueId()), tranfered_amount_taxed);
                         }
                     }
                     else {

@@ -1,13 +1,8 @@
 name: PayTaxPlugin
 main: io.github.kuohsuan.paytax.PayTaxPlugin
 version: ${version}
+loadbefore: [Essentials]
 commands:
   pay:
     description: .
-    usage: ""
-  testp:
-    description: .
-    usage: ""
-  teste:
-    description: .
-    usage: ""
+    usage: 
