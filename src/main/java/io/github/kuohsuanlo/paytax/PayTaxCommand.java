@@ -1,5 +1,5 @@
 
-package io.github.kuohsuan.paytax;
+package io.github.kuohsuanlo.paytax;
 
 import net.milkbowl.vault.economy.EconomyResponse;
 
