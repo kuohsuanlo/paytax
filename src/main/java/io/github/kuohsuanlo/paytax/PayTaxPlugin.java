@@ -72,10 +72,11 @@ public class PayTaxPlugin extends JavaPlugin {
         if (!(sender instanceof Player)) {
             return false;
         }
-        Player player = (Player) sender;
+        Player player = (Player) sender; 
         
-        if(command.getLabel().equals("paytax")  ||  command.getLabel().equals("pay")) {
-            
+        //if(command.getLabel().equals("paytax")  ||  command.getLabel().equals("pay")) {
+        if(command.getLabel().equals("paytax")) {
+                    
             if (split.length == 2) {
                 try {
                     String receiver_name = split[0];
@@ -85,8 +86,8 @@ public class PayTaxPlugin extends JavaPlugin {
                     EconomyResponse r_withdraw = econ.withdrawPlayer(this.getServer().getOfflinePlayer(player.getUniqueId()), tranfered_amount_taxed);
                     
                     if (r_withdraw.transactionSuccess()){
-                    	sender.sendMessage("§transcation success: You paied §6"+receiver_name+" §a"+econ.format(tranfered_amount)+",and§c being taxed "+Math.round(TAX_RATE*100)+"% of the amount : §a "+econ.format(tranfered_amount*TAX_RATE));
-                    	sender.sendMessage("§aYou have balance  : "+ econ.format(econ.getBalance(player)));
+                    	sender.sendMessage("§a[PayTax] : Transcation success. You paied §6"+receiver_name+" §a"+econ.format(tranfered_amount)+", and§c being taxed "+Math.round(TAX_RATE*100)+"% :§a "+econ.format(tranfered_amount*TAX_RATE));
+                    	sender.sendMessage("§a[PayTax] : You now have "+ econ.format(econ.getBalance(player)));
                     	//sender.sendMessage("§a轉帳成功: 你成功的支付 玩家§6"+receiver_name+" §a"+econ.format(tranfered_amount)+",並額外§c扣除7% 手續費§a "+econ.format(tranfered_amount*0.07));
                     	//sender.sendMessage("§a你目前的餘額為  : "+ econ.format(econ.getBalance(player)));
                     	
@@ -94,8 +95,8 @@ public class PayTaxPlugin extends JavaPlugin {
                         
                     	if(r_receive.transactionSuccess()){
                         	if(this.getServer().getPlayer(receiver_name)!=null){
-                        		this.getServer().getPlayer(receiver_name).sendMessage("§atranscation success: You got §6"+player.getName()+" §a money : "+econ.format(r_receive.amount));
-                        		this.getServer().getPlayer(receiver_name).sendMessage("§aYou have balance "+ econ.format(r_receive.balance)+"§a after transcation.");
+                        		this.getServer().getPlayer(receiver_name).sendMessage("§a[PayTax] : Transcation success. You got §6"+player.getName()+"'s§a money : "+econ.format(r_receive.amount));
+                        		this.getServer().getPlayer(receiver_name).sendMessage("§a[PayTax] : You now have "+ econ.format(r_receive.balance)+"§a after the transcation.");
                         		//this.getServer().getPlayer(receiver_name).sendMessage("§a轉帳成功: 你收到了來自 玩家§6"+player.getName()+" §a的金額 "+econ.format(r_receive.amount));
                         		//this.getServer().getPlayer(receiver_name).sendMessage("§a你目前餘額為 "+ econ.format(r_receive.balance));
                         		EconomyResponse r_tax = econ.depositPlayer(this.getServer().getOfflinePlayer("tax"),  tranfered_amount*0.07);
@@ -105,18 +106,18 @@ public class PayTaxPlugin extends JavaPlugin {
                         else{
                         	//basically this won't happened, because even the id never logs in, the payment is still valid, the money is still transfered to the mistyped account.
                         	//sender.sendMessage("§c轉帳錯誤: 請確認金額後重新轉帳");
-                        	sender.sendMessage("§ctranscation err: Please reassure you transcation amount.");
+                        	sender.sendMessage("§c[PayTax] : Transcation err: Please reassure you transcation amount.");
                         	r_withdraw = econ.depositPlayer(this.getServer().getOfflinePlayer(player.getUniqueId()), tranfered_amount_taxed);
                         }
                     }
                     else {
-                    	sender.sendMessage("§ctranscation err: You can't afford the amount after taxing : "+econ.format(tranfered_amount_taxed)+".");
+                    	sender.sendMessage("§c[PayTax] : Transcation err: You can't afford the amount after taxing : "+econ.format(tranfered_amount_taxed)+".");
                     	//sender.sendMessage("§c轉帳錯誤: 餘額不足支付 轉帳金額 加上 手續費,一共"+econ.format(tranfered_amount_taxed));
                         //sender.sendMessage(String.format("An error occured: %s", r_withdraw.errorMessage));
                     }
                     ;
                 } catch (NumberFormatException ex) {
-                	player.sendMessage("§ctranscation err: You can't afford the amount after being taxed.");
+                	player.sendMessage("§c[PayTax] : Transcation err: You can't afford the amount after being taxed.");
                 	//player.sendMessage("§c轉帳錯誤: 餘額不足支付  轉帳金額   加上  手續費");
                 }
             }

@@ -6,6 +6,3 @@ commands:
   paytax:
     description: .
     usage: 
-  pay:
-    description: .
-    usage: 
