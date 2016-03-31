@@ -2,11 +2,13 @@
 package io.github.kuohsuanlo.paytax;
 
 
+import java.io.File;
 import java.util.logging.Logger;
 import java.util.HashMap;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
@@ -26,8 +28,9 @@ public class PayTaxPlugin extends JavaPlugin {
     private final HashMap<Player, Boolean> debugees = new HashMap<Player, Boolean>();
     
     private static final Logger log = Logger.getLogger("Minecraft");
+    private double TAX_RATE = 0.07;
     public static Economy econ = null;
-
+    private FileConfiguration config;
     @Override
     public void onDisable() {
         // TODO: Place any custom disable code here
@@ -48,11 +51,19 @@ public class PayTaxPlugin extends JavaPlugin {
         // Register our events
         PluginManager pm = getServer().getPluginManager();
 
-        // Register our commands
-        //getCommand("pay").setExecutor(new PayTaxCommand());
-        //getCommand("teste").setExecutor(new PayTaxCommand());
-        //getCommand("testp").setExecutor(new PayTaxCommand());
-        
+    	new File("./plugins/PayTax").mkdirs();
+    	config = this.getConfig();
+    	
+    	//config.createSection("#The following time period and max_untouched_chunk tolerance before it gets restored");
+    	//config.createSection("#needs a server restart to change.");
+    	config.addDefault("version","1.0.0");
+    	config.addDefault("TAX_RATE",0.07);
+    	config.options().copyDefaults(true);
+    	saveConfig();
+    	
+    	TAX_RATE = config.getDouble("TAX_RATE");
+    	
+    	
         // EXAMPLE: Custom code, here we just output some info so we can check all is well
         PluginDescriptionFile pdfFile = this.getDescription();
         getLogger().info( pdfFile.getName() + " version " + pdfFile.getVersion() + " is enabled!" );
@@ -69,12 +80,12 @@ public class PayTaxPlugin extends JavaPlugin {
                 try {
                     String receiver_name = split[0];
                     double tranfered_amount= Double.parseDouble(split[1]);
-                    double tranfered_amount_taxed= tranfered_amount*1.07;
+                    double tranfered_amount_taxed= tranfered_amount*(1.00+TAX_RATE);
                     
                     EconomyResponse r_withdraw = econ.withdrawPlayer(this.getServer().getOfflinePlayer(player.getUniqueId()), tranfered_amount_taxed);
                     
                     if (r_withdraw.transactionSuccess()){
-                    	sender.sendMessage("§transcation success: You paied §6"+receiver_name+" §a"+econ.format(tranfered_amount)+",and§c being taxed 7% of the amount : §a "+econ.format(tranfered_amount*0.07));
+                    	sender.sendMessage("§transcation success: You paied §6"+receiver_name+" §a"+econ.format(tranfered_amount)+",and§c being taxed "+Math.round(TAX_RATE*100)+"% of the amount : §a "+econ.format(tranfered_amount*TAX_RATE));
                     	sender.sendMessage("§aYou have balance  : "+ econ.format(econ.getBalance(player)));
                     	//sender.sendMessage("§a轉帳成功: 你成功的支付 玩家§6"+receiver_name+" §a"+econ.format(tranfered_amount)+",並額外§c扣除7% 手續費§a "+econ.format(tranfered_amount*0.07));
                     	//sender.sendMessage("§a你目前的餘額為  : "+ econ.format(econ.getBalance(player)));
