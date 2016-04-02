@@ -5,4 +5,12 @@ loadbefore: [essentials]
 commands:
   paytax:
     description: .
+    aliases: pay
+    usage:
+  payon:
+    description: .
+    aliases: pay
     usage: 
+  payoff:
+    description: .
+    usage:
