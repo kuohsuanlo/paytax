@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.github.kuohsuanlo</groupId>
   <artifactId>paytax</artifactId>
-  <version>1.0.0b</version>
+  <version>1.0.0c</version>
   <name>PayTaxPlugin</name>
   <url>http://dev.bukkit.org/bukkit-plugins/paytax/</url>
 
