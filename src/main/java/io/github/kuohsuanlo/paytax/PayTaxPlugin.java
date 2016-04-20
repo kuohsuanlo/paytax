@@ -41,6 +41,7 @@ public class PayTaxPlugin extends JavaPlugin {
 	public static String WITH_THE_AMOUNT;
 	public static String NOT_A_NUMBER;
 	public static String NOT_ENOUGH_MONEY;
+	public static String NO_SUCH_ID;
     private FileConfiguration config;
     @Override
     public void onDisable() {
@@ -77,6 +78,7 @@ public class PayTaxPlugin extends JavaPlugin {
     	config.addDefault("WITH_THE_AMOUNT","with the amount ");
     	config.addDefault("NOT_A_NUMBER","Not a valid number.");
     	config.addDefault("NOT_ENOUGH_MONEY","You can't afford the amount after taxing : ");
+    	config.addDefault("NO_SUCH_ID", "Player not found. Please use /payoff ID amount");
     	config.options().copyDefaults(true);
     	saveConfig();
     	
@@ -92,6 +94,7 @@ public class PayTaxPlugin extends JavaPlugin {
     	WITH_THE_AMOUNT = config.getString("WITH_THE_AMOUNT");
     	NOT_A_NUMBER = config.getString("NOT_A_NUMBER");
     	NOT_ENOUGH_MONEY = config.getString("NOT_ENOUGH_MONEY");
+    	NO_SUCH_ID = config.getString("NO_SUCH_ID");
     	config.options().copyDefaults(true);
     	
         // EXAMPLE: Custom code, here we just output some info so we can check all is well
@@ -116,7 +119,7 @@ public class PayTaxPlugin extends JavaPlugin {
 
                     if (econ.has(this.getServer().getOfflinePlayer(player.getUniqueId()), tranfered_amount_taxed)){//金錢足夠
                     	EconomyResponse r_send = econ.withdrawPlayer(this.getServer().getOfflinePlayer(player.getUniqueId()), tranfered_amount_taxed);
-                    	sender.sendMessage(TRANSACTION_SUCCESS+YOU_SUCCESSFULLY_PAID+receiver_name+econ.format(tranfered_amount)+WITH_THE_TAX_RATE+ Math.round(TAX_RATE*100) +TOTAL_EXTRA_FREE+econ.format(tranfered_amount*TAX_RATE));
+                    	sender.sendMessage(TRANSACTION_SUCCESS+YOU_SUCCESSFULLY_PAID+receiver_name+" "+econ.format(tranfered_amount)+WITH_THE_TAX_RATE+ Math.round(TAX_RATE*100) +"%\n"+TOTAL_EXTRA_FREE+econ.format(tranfered_amount*TAX_RATE));
                     	sender.sendMessage(YOUR_CURRENT_BALANCE+ econ.format(econ.getBalance(player)));
                     	
                     	//sender.sendMessage("§a轉帳成功: 你成功的支付 玩家§6"+receiver_name+" §a"+econ.format(tranfered_amount)+",並額外§c扣除"+ Math.round(TAX_RATE*100) +"% 手續費§a "+econ.format(tranfered_amount*TAX_RATE));
@@ -178,13 +181,15 @@ public class PayTaxPlugin extends JavaPlugin {
                 		//if(econ.hasAccount(this.getServer().getOfflinePlayer(receiver_name))){
                         	//sender.sendMessage("§c[PayTax] : Transcation err: Please reassure the receiver's ID. Is he or she online? Use /payoff to transfer money to offline players");
                         	//sender.sendMessage("§c轉帳錯誤: 請確認玩家ID是否輸入錯誤,或是不在線上。 如果想要轉帳給離線玩家,請使用  §e/payoff ID 金額  §c(請仔細確認ID)");
-                        	sender.sendMessage("§a[PayTax] : You now have "+ econ.format(econ.getBalance(player)));
-                        	sender.sendMessage("§a你目前的餘額為  : "+ econ.format(econ.getBalance(player)));
+                        	//sender.sendMessage("§a[PayTax] : You now have "+ econ.format(econ.getBalance(player)));
+                    		sender.sendMessage(TRANSACTION_ERROR+ NO_SUCH_ID);
+                    		sender.sendMessage(YOUR_CURRENT_BALANCE+ econ.format(econ.getBalance(player)));
+                        	
                     	}
                     	else{//ID存在
                             if (econ.has(this.getServer().getOfflinePlayer(player.getUniqueId()), tranfered_amount_taxed)){//金錢足夠
                             	EconomyResponse r_send = econ.withdrawPlayer(this.getServer().getOfflinePlayer(player.getUniqueId()), tranfered_amount_taxed);
-                            	sender.sendMessage(TRANSACTION_SUCCESS+YOU_SUCCESSFULLY_PAID+receiver_name+econ.format(tranfered_amount)+WITH_THE_TAX_RATE+ Math.round(TAX_RATE*100) +TOTAL_EXTRA_FREE+econ.format(tranfered_amount*TAX_RATE));
+                            	sender.sendMessage(TRANSACTION_SUCCESS+YOU_SUCCESSFULLY_PAID+receiver_name+" "+econ.format(tranfered_amount)+WITH_THE_TAX_RATE+ Math.round(TAX_RATE*100) +"%\n"+TOTAL_EXTRA_FREE+econ.format(tranfered_amount*TAX_RATE));
                             	sender.sendMessage(YOUR_CURRENT_BALANCE+ econ.format(econ.getBalance(player)));
                             	
                             	//sender.sendMessage("§a[PayTax] : Transcation success. You paied §6"+receiver_name+" §a"+econ.format(tranfered_amount)+", and§c being taxed "+Math.round(TAX_RATE*100)+"% :§a "+econ.format(tranfered_amount*TAX_RATE));
